@@ -26,6 +26,5 @@ namespace EcommerceStore.Models
         public bool Activo { get; set; }
 
 
-
     }
 }

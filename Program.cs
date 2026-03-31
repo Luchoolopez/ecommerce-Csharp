@@ -1,4 +1,5 @@
 using EcommerceStore.Data; //importa la carpeta donde esta AppDbContext.cs
+using EcommerceStore.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 //configura el dbcontext para que use mysql con pomelo
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddScoped<IUsuariosService, UsuarioService>(); //registra el servicio de usuarios para que pueda ser inyectado en los controladores
 
 
 builder.Services.AddControllers();
@@ -26,12 +29,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapGet("/usuarios", async (EcommerceStore.Data.AppDbContext db) =>
-{
-    var usuarios = await db.Usuarios.ToListAsync(); //toListAsync == SELECT * FROM usuarios o .find()
-
-    return Results.Ok(usuarios);
-});
 
 app.Run();

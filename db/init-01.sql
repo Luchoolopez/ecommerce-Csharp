@@ -1,5 +1,5 @@
 -- ======================================
--- ECOMMERCE DATABASE - VERSIÓN MEJORADA
+-- ECOMMERCE DATABASE - VERSIÓN GENÉRICA
 -- ======================================
 
 -- ======================================
@@ -55,11 +55,10 @@ CREATE TABLE categorias (
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sku VARCHAR(50) UNIQUE,
-    nombre VARCHAR(150) NOT NULL,  -- "REMERA OVER HEADS NEGRO"
-    genero ENUM('Hombre', 'Mujer', 'Unisex') DEFAULT 'Unisex',
+    nombre VARCHAR(150) NOT NULL,
     descripcion TEXT,
     precio_base DECIMAL(10,2) NOT NULL,  -- Precio base sin descuento
-    descuento DECIMAL(5,2) DEFAULT 0,    -- Descuento que aplica a TODAS las variantes de talle
+    descuento DECIMAL(5,2) DEFAULT 0,    -- Descuento que aplica a TODAS las variantes
     peso DECIMAL(6,3),    -- en kilogramos
     categoria_id INT,
     imagen_principal VARCHAR(255),
@@ -76,19 +75,19 @@ CREATE TABLE productos (
 );
 
 -- ======================================
--- TABLA VARIANTES_PRODUCTO  (TALLES)
+-- TABLA VARIANTES_PRODUCTO (Atributos genéricos: Capacidad, Color, Talle, etc.)
 -- ======================================
 CREATE TABLE variantes_producto (
     id INT AUTO_INCREMENT PRIMARY KEY,
     producto_id INT NOT NULL,
-    talle VARCHAR(10) NOT NULL,  -- "XS", "S", "M", "L", "XL", "XXL"
-    sku_variante VARCHAR(100) UNIQUE,  -- "REMERA-OVERHEADS-NEGRO-M"
+    atributo_variante VARCHAR(50) NOT NULL,  -- Ej: "750ml", "Rojo", "XL", "220V"
+    sku_variante VARCHAR(100) UNIQUE,
     stock INT NOT NULL DEFAULT 0,
     activo BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_producto_talle (producto_id, talle),  -- No puede haber dos "M" para el mismo producto
+    UNIQUE KEY unique_producto_atributo (producto_id, atributo_variante), 
     CONSTRAINT chk_stock_variante CHECK (stock >= 0)
 );
 
@@ -140,10 +139,10 @@ CREATE TABLE pedidos (
 CREATE TABLE detalles_pedido (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pedido_id INT NOT NULL,
-    variante_id INT NOT NULL,  -- CAMBIO: ahora apunta a la variante
-    sku_variante VARCHAR(100),  -- Guardamos SKU de la variante por seguridad
+    variante_id INT NOT NULL,
+    sku_variante VARCHAR(100),
     nombre_producto VARCHAR(150),
-    talle VARCHAR(10),  -- NUEVO: guardamos el talle
+    atributo_variante VARCHAR(50),  -- Guardamos la variante ("750ml") al momento de compra
     cantidad INT NOT NULL,
     precio_unitario DECIMAL(10,2) NOT NULL,
     descuento_aplicado DECIMAL(5,2) DEFAULT 0,
@@ -159,7 +158,7 @@ CREATE TABLE detalles_pedido (
 CREATE TABLE carritos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    variante_id INT NOT NULL,  -- apunta a la variante (producto + talle)
+    variante_id INT NOT NULL,  
     cantidad INT DEFAULT 1,
     fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -188,13 +187,13 @@ CREATE TABLE pagos (
     pedido_id INT NOT NULL,
     metodo ENUM('mercadopago','mobbex','transferencia','efectivo') NOT NULL,
     estado ENUM('pendiente','aprobado','rechazado','cancelado') DEFAULT 'pendiente',
-    transaccion_id VARCHAR(100), -- ID de la pasarela
+    transaccion_id VARCHAR(100), 
     monto DECIMAL(10,2) NOT NULL,
-    detalle_metodo VARCHAR(255), -- "Visa Banco Galicia 6 cuotas"
+    detalle_metodo VARCHAR(255), 
     cuotas INT DEFAULT 1,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_aprobacion TIMESTAMP NULL,
-    datos_adicionales JSON, -- para guardar respuesta completa de la pasarela
+    datos_adicionales JSON, 
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE RESTRICT,
     CONSTRAINT chk_monto CHECK (monto >= 0),
     CONSTRAINT chk_cuotas CHECK (cuotas >= 1)
@@ -207,7 +206,7 @@ CREATE TABLE shipping_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pedido_id INT NOT NULL,
     proveedor ENUM('andreani','correo_argentino') NOT NULL,
-    accion VARCHAR(50), -- 'cotizar', 'crear_envio', 'tracking', etc.
+    accion VARCHAR(50), 
     request TEXT,
     response TEXT,
     estado ENUM('success','error','warning') DEFAULT 'success',
@@ -224,9 +223,9 @@ CREATE TABLE cupones (
     codigo VARCHAR(50) UNIQUE NOT NULL,
     descripcion VARCHAR(200),
     tipo ENUM('porcentaje','monto_fijo') NOT NULL,
-    valor DECIMAL(10,2) NOT NULL, -- 15.5 para 15.5% o $15.5
-    monto_minimo DECIMAL(10,2) DEFAULT 0, -- compra mínima para aplicar
-    usos_maximos INT DEFAULT NULL, -- NULL = ilimitado
+    valor DECIMAL(10,2) NOT NULL, 
+    monto_minimo DECIMAL(10,2) DEFAULT 0, 
+    usos_maximos INT DEFAULT NULL, 
     usos_actuales INT DEFAULT 0,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
@@ -254,40 +253,24 @@ CREATE TABLE cupones_usados (
 -- ======================================
 -- ÍNDICES PARA OPTIMIZAR PERFORMANCE
 -- ======================================
-
--- Índices para búsquedas frecuentes
 CREATE INDEX idx_productos_categoria ON productos(categoria_id);
 CREATE INDEX idx_productos_activo ON productos(activo);
 CREATE INDEX idx_productos_sku ON productos(sku);
 CREATE INDEX idx_productos_nombre ON productos(nombre);
-
--- Índices para pedidos
 CREATE INDEX idx_pedidos_usuario ON pedidos(usuario_id);
 CREATE INDEX idx_pedidos_fecha ON pedidos(fecha);
 CREATE INDEX idx_pedidos_estado ON pedidos(estado);
 CREATE INDEX idx_pedidos_numero ON pedidos(numero_pedido);
-
--- Índices para detalles de pedido
 CREATE INDEX idx_detalles_pedido ON detalles_pedido(pedido_id);
-
--- Índices para carritos
 CREATE INDEX idx_carritos_usuario ON carritos(usuario_id);
 CREATE INDEX idx_carritos_variante ON carritos(variante_id);
-
--- Índices para direcciones
 CREATE INDEX idx_direcciones_usuario ON direcciones(usuario_id);
 CREATE INDEX idx_direcciones_principal ON direcciones(es_principal);
-
--- Índices para pagos
 CREATE INDEX idx_pagos_pedido ON pagos(pedido_id);
 CREATE INDEX idx_pagos_estado ON pagos(estado);
 CREATE INDEX idx_pagos_transaccion ON pagos(transaccion_id);
-
--- Índices para imágenes
 CREATE INDEX idx_producto_imagenes_producto ON producto_imagenes(producto_id);
 CREATE INDEX idx_producto_imagenes_orden ON producto_imagenes(orden);
-
--- Índices para cupones
 CREATE INDEX idx_cupones_codigo ON cupones(codigo);
 CREATE INDEX idx_cupones_activo ON cupones(activo);
 CREATE INDEX idx_cupones_fechas ON cupones(fecha_inicio, fecha_fin);
@@ -295,8 +278,6 @@ CREATE INDEX idx_cupones_fechas ON cupones(fecha_inicio, fecha_fin);
 -- ======================================
 -- TRIGGERS ÚTILES
 -- ======================================
-
--- Generar número de pedido automáticamente
 DELIMITER //
 CREATE TRIGGER before_pedido_insert 
 BEFORE INSERT ON pedidos 
@@ -308,7 +289,6 @@ BEGIN
 END//
 DELIMITER ;
 
--- Actualizar stock cuando se confirma un pedido
 DELIMITER //
 CREATE TRIGGER after_detalle_pedido_insert
 AFTER INSERT ON detalles_pedido
@@ -323,8 +303,6 @@ DELIMITER ;
 -- ======================================
 -- VISTAS ÚTILES
 -- ======================================
-
--- Vista de productos con información completa
 CREATE VIEW vista_productos_completa AS
 SELECT 
     p.id,
@@ -348,7 +326,6 @@ GROUP BY
     p.descuento, p.peso, p.imagen_principal, c.nombre, 
     p.activo, p.fecha_creacion;
 
--- Vista de pedidos con información del usuario
 CREATE VIEW vista_pedidos_completa AS
 SELECT 
     ped.id,

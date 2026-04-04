@@ -4,6 +4,8 @@ namespace EcommerceStore.Services
 {
     public interface IAuthService
     {
-        Task<UsuarioResponseDto> RegisterAsync(UsuarioRegisterDto dto);
+        Task<AuthResponseDto> RegisterAsync(UsuarioRegisterDto dto);
+        Task<AuthResponseDto> LoginAsync(UsuarioLoginDto dto);
+        Task<RefreshTokenRequestDto> RefreshTokenAsync(RefreshTokenRequestDto dto);
     }
 }

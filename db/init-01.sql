@@ -18,6 +18,8 @@ CREATE TABLE usuarios (
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     reset_password_token VARCHAR(255) NULL,
     reset_password_expires TIMESTAMP NULL
+    refresh_token VARCHAR(255) NULL,
+    reset_token_expires TIMESTAMP NULL
 );
 
 -- ======================================

@@ -50,5 +50,9 @@ namespace EcommerceStore.Models
 
         [Column("reset_password_expires")]
         public DateTime? ResetPasswordExpires { get; set; }
+        [Column("refresh_token")]
+        public string? RefreshToken { get; set; }
+        [Column("refresh_token_expires")]
+        public DateTime? RefreshTokenExpires { get; set; }
     }
 }

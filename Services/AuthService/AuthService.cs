@@ -1,6 +1,5 @@
 ﻿using BCrypt.Net;
 using EcommerceStore.Data;
-using EcommerceStore.DTOs;
 using EcommerceStore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,9 +7,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
+using EcommerceStore.DTOs.UsuarioDto;
+using EcommerceStore.DTOs.AuthDto;
 
 
-namespace EcommerceStore.Services
+namespace EcommerceStore.Services.AuthService
 
 {
     public class AuthService : IAuthService
@@ -179,6 +180,40 @@ namespace EcommerceStore.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
+        }
+
+        public async Task<UsuarioResponseDto> GetMyProfile(string userId)
+        {
+                var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+                if (usuario == null)
+                {
+                    throw new Exception("Usuario no encontrado");
+                }
+    
+                var usuarioResponse = new UsuarioResponseDto
+                {
+                    Id = usuario.Id,
+                    Nombre = usuario.Nombre,
+                    Email = usuario.Email,
+                    Rol = usuario.Rol.ToString(),
+                    Telefono = usuario.Telefono,
+                    Activo = usuario.Activo
+                };
+    
+                return usuarioResponse;
+        }
+
+        public async Task Logout(string userId)
+        {
+            int idNumerico = int.Parse(userId);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == idNumerico);
+            if (usuario == null)
+            {
+                throw new Exception("Usuario no encontrado");
+            }
+            usuario.RefreshToken = null;
+            usuario.RefreshTokenExpires = null;
+            await _context.SaveChangesAsync();
         }
     }
 }

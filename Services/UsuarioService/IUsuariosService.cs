@@ -1,6 +1,6 @@
 ﻿using EcommerceStore.Models;
 
-namespace EcommerceStore.Services
+namespace EcommerceStore.Services.UsuarioService.UsuarioService
 {
     public interface IUsuariosService
     {

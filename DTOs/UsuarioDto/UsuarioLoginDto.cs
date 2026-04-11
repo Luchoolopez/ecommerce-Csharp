@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceStore.DTOs
+namespace EcommerceStore.DTOs.UsuarioDto
 {
     public class UsuarioLoginDto
     {

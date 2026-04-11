@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceStore.DTOs
+namespace EcommerceStore.DTOs.AuthDto
 {
     public class RefreshTokenRequestDto
     {

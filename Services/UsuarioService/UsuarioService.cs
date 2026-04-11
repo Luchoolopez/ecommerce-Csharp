@@ -2,7 +2,7 @@
 using EcommerceStore.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceStore.Services
+namespace EcommerceStore.Services.UsuarioService
 {
     public class UsuarioService : IUsuariosService
     {

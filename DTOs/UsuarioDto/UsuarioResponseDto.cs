@@ -1,4 +1,4 @@
-﻿namespace EcommerceStore.DTOs
+﻿namespace EcommerceStore.DTOs.UsuarioDto
 {
     public class UsuarioResponseDto
     {

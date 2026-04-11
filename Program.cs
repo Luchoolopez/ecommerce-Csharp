@@ -1,5 +1,6 @@
 using EcommerceStore.Data; //importa la carpeta donde esta AppDbContext.cs
-using EcommerceStore.Services;
+using EcommerceStore.Services.AuthService;
+using EcommerceStore.Services.UsuarioService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

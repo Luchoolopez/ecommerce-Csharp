@@ -1,6 +1,9 @@
-﻿using EcommerceStore.DTOs;
-using EcommerceStore.Services;
+﻿using EcommerceStore.DTOs.AuthDto;
+using EcommerceStore.DTOs.UsuarioDto;
+using EcommerceStore.Services.AuthService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerceStore.Controllers
 {
@@ -66,7 +69,7 @@ namespace EcommerceStore.Controllers
         {
             try
             {
-               var result = await _authService.RefreshTokenAsync(dto);
+                var result = await _authService.RefreshTokenAsync(dto);
                 return StatusCode(200, new
                 {
                     mensaje = "Token actualizado exitosamente",
@@ -76,6 +79,50 @@ namespace EcommerceStore.Controllers
             catch (Exception ex)
             {
                 return Unauthorized(new { mensaje = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == null)
+                {
+                    return Unauthorized(new { mensaje = "Usuario no autenticado" });
+                }
+                var profile = await _authService.GetMyProfile(userId);
+                return Ok(new
+                {
+                    mensaje = "Perfil obtenido exitosamente",
+                    data = profile
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Ocurrio un error al obtener el perfil.", error = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == null)
+                {
+                    return Unauthorized(new { mensaje = "Usuario no autenticado" });
+                }
+                await _authService.Logout(userId);
+                return Ok(new { mensaje = "Cierre de sesion exitoso" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Ocurrio un error al cerrar sesion.", error = ex.Message });
             }
         }
     }

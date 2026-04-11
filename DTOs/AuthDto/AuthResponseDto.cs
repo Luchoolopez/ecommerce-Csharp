@@ -1,4 +1,6 @@
-﻿namespace EcommerceStore.DTOs
+﻿using EcommerceStore.DTOs.UsuarioDto;
+
+namespace EcommerceStore.DTOs.AuthDto
 {
     public class AuthResponseDto
     {

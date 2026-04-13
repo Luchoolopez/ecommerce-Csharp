@@ -152,7 +152,7 @@ namespace EcommerceStore.Services.AuthService
             {
                 throw new Exception("Refresh token invalido");
             }
-            if(usuario.RefreshTokenExpires < DateTime.UtcNow)
+            if(usuario.RefreshToken == null || usuario.RefreshTokenExpires < DateTime.UtcNow)
             {
                 throw new Exception("Refresh token expirado");
             }

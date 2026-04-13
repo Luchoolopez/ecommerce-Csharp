@@ -51,9 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.UseAuthentication(); //pregunta quien sos
+app.UseAuthentication();
 
 app.UseAuthorization(); //pregunta si tenes permiso 
 

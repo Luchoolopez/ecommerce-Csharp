@@ -26,5 +26,6 @@ namespace EcommerceStore.Data
 
         //esto representa la tabla "usuarios" en la db 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
     }
 }

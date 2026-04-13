@@ -33,7 +33,7 @@ namespace EcommerceStore.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.Message == "El email ya se encuentra registrado")
+                if (ex.Message == "El email ya esta registrado")
                 {
                     return BadRequest(new { mensaje = ex.Message });
                 }

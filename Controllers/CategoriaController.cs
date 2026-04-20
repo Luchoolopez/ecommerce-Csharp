@@ -17,13 +17,32 @@ namespace EcommerceStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategorias()
         {
-            var categorias = await _categoriaService.GetCategorias();
-            return Ok(new
+            try
             {
-                exito = true,
-                mensaje = "Categorias obtenidas exitosamente",
-                data = categorias
-            });
+                var categorias = await _categoriaService.GetCategorias();
+                if(categorias == null)
+                {
+                    return NotFound(new
+                    {
+                        exito = false,
+                        mensaje = "Cateogira no encontrada"
+                    });
+                }
+                return Ok(new
+                {
+                    exito = true,
+                    mensaje = "Categorias obtenidas exitosamente",
+                    data = categorias
+                });
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    exito = false,
+                    mensaje = "Error al obtener las categorias",
+                    error = ex.Message,
+                });
+            }
         }
 
         [HttpGet("{id}")]
@@ -113,7 +132,5 @@ namespace EcommerceStore.Controllers
                 });
             }
         }
-
-
     }
 }

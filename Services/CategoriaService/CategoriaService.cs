@@ -109,7 +109,7 @@ namespace EcommerceStore.Services.CategoriaService
             {
                 throw new Exception("Categoria no encontrada");
             }
-            _context.Categorias.Remove(categoriaToDelete);
+            categoriaToDelete.Activo = false;
             await _context.SaveChangesAsync();
             return true;
         }

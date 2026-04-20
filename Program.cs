@@ -30,7 +30,8 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
             ValidateIssuer = false, //en produccion ponerlo en true
             ValidateAudience = false, //en produccion ponerlo en true
-            ClockSkew = TimeSpan.Zero //evita que los tokens expiren 5 mins tarde 
+            ClockSkew = TimeSpan.Zero, //evita que los tokens expiren 5 mins tarde 
+            RoleClaimType = "rol" 
         };
     });
 

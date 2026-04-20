@@ -1,4 +1,5 @@
 ﻿using EcommerceStore.Data;
+using EcommerceStore.Services.UsuarioService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

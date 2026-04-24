@@ -17,113 +17,47 @@ namespace EcommerceStore.Controllers
             _authService = authService;
         }
 
-
         [HttpPost("register")]
         public async Task<IActionResult> Register(UsuarioRegisterDto dto)
         {
-            try
-            {
-                var usuarioCreado = await _authService.RegisterAsync(dto);
-                return StatusCode(201, new
-                {
-                    mensaje = "Usuario registrado exitosamente",
-                    usuario = usuarioCreado
-                });
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "El email ya esta registrado")
-                {
-                    return BadRequest(new { mensaje = ex.Message });
-                }
-
-                return StatusCode(500, new { mensaje = "Ocurrio un error al registrar el usuario.", error = ex.Message });
-            }
+            var usuarioCreado = await _authService.RegisterAsync(dto);
+            return StatusCode(201, new { exito = true, mensaje = "Usuario registrado exitosamente", data = usuarioCreado });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UsuarioLoginDto dto)
         {
-            try
-            {
-                var authResponse = await _authService.LoginAsync(dto);
-                return StatusCode(200, new
-                {
-                    mensaje = "Inicio de sesion exitoso",
-                    data = authResponse
-                });
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "Credenciales invalidas")
-                {
-                    return Unauthorized(new { mensaje = ex.Message });
-                }
-                return StatusCode(500, new { mensaje = "Ocurrio un error al iniciar sesion.", error = ex.Message });
-            }
+            var authResponse = await _authService.LoginAsync(dto);
+            return Ok(new { exito = true, mensaje = "Inicio de sesion exitoso", data = authResponse });
         }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequestDto dto)
         {
-            try
-            {
-                var result = await _authService.RefreshTokenAsync(dto);
-                return StatusCode(200, new
-                {
-                    mensaje = "Token actualizado exitosamente",
-                    data = result
-                });
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(new { mensaje = ex.Message });
-            }
+            var result = await _authService.RefreshTokenAsync(dto);
+            return Ok(new { exito = true, mensaje = "Token actualizado exitosamente", data = result });
         }
 
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
         {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                {
-                    return Unauthorized(new { mensaje = "Usuario no autenticado" });
-                }
-                var profile = await _authService.GetMyProfile(userId);
-                return Ok(new
-                {
-                    mensaje = "Perfil obtenido exitosamente",
-                    data = profile
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Ocurrio un error al obtener el perfil.", error = ex.Message });
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized(new { exito = false, mensaje = "Usuario no autenticado", data = (object)null });
+
+            var profile = await _authService.GetMyProfile(userId);
+            return Ok(new { exito = true, mensaje = "Perfil obtenido exitosamente", data = profile });
         }
 
         [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                {
-                    return Unauthorized(new { mensaje = "Usuario no autenticado" });
-                }
-                await _authService.Logout(userId);
-                return Ok(new { mensaje = "Cierre de sesion exitoso" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Ocurrio un error al cerrar sesion.", error = ex.Message });
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized(new { exito = false, mensaje = "Usuario no autenticado", data = (object)null });
+
+            await _authService.Logout(userId);
+            return Ok(new { exito = true, mensaje = "Cierre de sesion exitoso", data = (object)null });
         }
     }
-}
+}    

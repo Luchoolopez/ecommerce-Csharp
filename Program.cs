@@ -1,4 +1,5 @@
 using EcommerceStore.Data; //importa la carpeta donde esta AppDbContext.cs
+using EcommerceStore.Middleware;
 using EcommerceStore.Services.AuthService;
 using EcommerceStore.Services.UsuarioService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 

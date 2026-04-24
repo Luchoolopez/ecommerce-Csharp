@@ -1,4 +1,5 @@
 ﻿using EcommerceStore.Data;
+using EcommerceStore.DTOs;
 using EcommerceStore.DTOs.CategoriaDto;
 using EcommerceStore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,18 @@ namespace EcommerceStore.Services.CategoriaService
             _context = context;
         }
 
-        public async Task<IEnumerable<CategoriaResponseDto>> GetCategorias()
+        public async Task<PagedResponse<CategoriaResponseDto>> GetCategorias(int page = 1, int limit = 100)
         {
-            var categorias = await _context.Categorias.ToListAsync();
+            var query = _context.Categorias.AsQueryable();
 
-            return categorias.Select(c => new CategoriaResponseDto
+            var totalItems = await query.CountAsync();
+
+            var categorias = await query
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToListAsync();
+
+            var categoriasDtos = categorias.Select(c => new CategoriaResponseDto
             {
                 Id = c.Id,
                 Nombre = c.Nombre,
@@ -26,6 +34,14 @@ namespace EcommerceStore.Services.CategoriaService
                 Activo = c.Activo,
                 FechaCreacion = c.FechaCreacion
             });
+
+            return new PagedResponse<CategoriaResponseDto>
+            {
+                Items = categoriasDtos,
+                TotalItems = totalItems,
+                Page = page,
+                Limit = limit
+            };
         }
 
         public async Task<CategoriaResponseDto> GetCategoriaById(int categoriaId)

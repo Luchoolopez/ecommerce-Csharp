@@ -1,4 +1,5 @@
 ﻿using EcommerceStore.Data;
+using EcommerceStore.DTOs;
 using EcommerceStore.DTOs.UsuarioDto;
 using EcommerceStore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,10 +35,17 @@ namespace EcommerceStore.Services.UsuarioService
             return userResponse;
         }
 
-        public async Task<IEnumerable<UsuarioResponseDto>> GetUsers()
+        public async Task<PagedResponse<UsuarioResponseDto>> GetUsers(int page = 1, int limit = 20)
         {
-            var users = await _context.Usuarios.ToListAsync();
-            return users.Select(u => new UsuarioResponseDto
+            var query = _context.Usuarios.AsQueryable();
+            var totalItems = await query.CountAsync(); //cuenta cuantos user hay en la db para que el front sepa cuantas pags hay
+
+            var users = await query
+                .Skip((page - 1) * limit) //salta los items de las paginas anteriores
+                .Take(limit) //toma solo los items de la pagina actual
+                .ToListAsync();
+
+            var userDtos = users.Select(u => new UsuarioResponseDto
             {
                 Id = u.Id,
                 Nombre = u.Nombre,
@@ -47,12 +55,22 @@ namespace EcommerceStore.Services.UsuarioService
                 Activo = u.Activo,
                 FechaCreacion = u.FechaCreacion
             });
+
+            return new PagedResponse<UsuarioResponseDto>
+            {
+                Items = userDtos,
+                TotalItems = totalItems,
+                Page = page,
+                Limit = limit,
+            };
+
+
         }
 
         public async Task<UsuarioResponseDto> UpdateUser(int userId, UsuarioUpdateDto usuarioDto)
         {
             var userToUpdate = await _context.Usuarios.FindAsync(userId);
-            if(userToUpdate == null)
+            if (userToUpdate == null)
             {
                 throw new Exception("Usuario no encontrado");
             }

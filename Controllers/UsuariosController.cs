@@ -22,9 +22,9 @@ namespace EcommerceStore.Controllers
         }
 
         [HttpGet] 
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
-            var users = await _usuarioService.GetUsers();
+            var users = await _usuarioService.GetUsers(page, limit);
             return Ok(new { exito = true, mensaje = "Usuarios obtenidos exitosamente", data = users });
         }
 

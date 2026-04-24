@@ -16,9 +16,9 @@ namespace EcommerceStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategorias()
+        public async Task<IActionResult> GetCategorias([FromQuery] int page = 1, [FromQuery] int limit = 100)
         {
-            var categorias = await _categoriaService.GetCategorias();
+            var categorias = await _categoriaService.GetCategorias(page, limit);
             return Ok(new { exito = true, mensaje = "Categorias obtenidas exitosamente", data = categorias });
         }
 

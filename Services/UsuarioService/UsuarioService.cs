@@ -27,7 +27,7 @@ namespace EcommerceStore.Services.UsuarioService
                 Id = user.Id,
                 Nombre = user.Nombre,
                 Email = user.Email,
-                Rol = user.Rol,
+                Rol = user.Rol.ToString(),
                 Telefono = user.Telefono,
                 Activo = user.Activo,
                 FechaCreacion = user.FechaCreacion
@@ -50,7 +50,7 @@ namespace EcommerceStore.Services.UsuarioService
                 Id = u.Id,
                 Nombre = u.Nombre,
                 Email = u.Email,
-                Rol = u.Rol,
+                Rol = u.Rol.ToString(),
                 Telefono = u.Telefono,
                 Activo = u.Activo,
                 FechaCreacion = u.FechaCreacion
@@ -94,7 +94,7 @@ namespace EcommerceStore.Services.UsuarioService
                 Id = userToUpdate.Id,
                 Nombre = userToUpdate.Nombre,
                 Email = userToUpdate.Email,
-                Rol = userToUpdate.Rol,
+                Rol = userToUpdate.Rol.ToString(),
                 Telefono = userToUpdate.Telefono,
                 Activo = userToUpdate.Activo,
                 FechaCreacion = userToUpdate.FechaCreacion

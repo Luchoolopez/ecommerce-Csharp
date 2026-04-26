@@ -9,8 +9,8 @@ namespace EcommerceStore.Services.ProductoService
         Task<ProductoResponseDto> GetProductoById(int id);
         Task<IEnumerable<ProductoResponseDto>> GetFeaturedProductos(int limit = 10);
         Task<IEnumerable<ProductoResponseDto>> GetNewProductos(int limit = 10);
-        Task<ProductoResponseDto> CreateProduct(ProductoCreateDto dto);
-        Task<ProductoResponseDto> UpdateProduct(int id, ProductoUpdateDto dto);
+        Task<ProductoResponseDto> CreateProducto(ProductoCreateDto dto);
+        Task<ProductoResponseDto> UpdateProducto(int id, ProductoUpdateDto dto);
         Task<bool> DeleteProducto(int id);
     }
 }

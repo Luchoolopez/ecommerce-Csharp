@@ -1,6 +1,7 @@
 using EcommerceStore.Data; //importa la carpeta donde esta AppDbContext.cs
 using EcommerceStore.Middleware;
 using EcommerceStore.Services.AuthService;
+using EcommerceStore.Services.ProductoService;
 using EcommerceStore.Services.UsuarioService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 
 builder.Services.AddScoped<IUsuariosService, UsuarioService>(); //registra el servicio de usuarios para que pueda ser inyectado en los controladores
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductoService, ProductoService>(); 
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 builder.Services.AddAuthentication(options =>
@@ -52,8 +54,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceStore.Models
 {
-    [Table("Categorias")]
+    [Table("categorias")]
     public class Categoria
     {
         [Key]

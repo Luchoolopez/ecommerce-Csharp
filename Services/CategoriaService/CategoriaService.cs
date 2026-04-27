@@ -77,6 +77,7 @@ namespace EcommerceStore.Services.CategoriaService
 
             var categoriaResponse = new CategoriaResponseDto
             {
+                Id = newCategoria.Id,
                 Nombre = newCategoria.Nombre,
                 Descripcion = newCategoria.Descripcion,
                 Activo = newCategoria.Activo,
@@ -110,6 +111,7 @@ namespace EcommerceStore.Services.CategoriaService
             await _context.SaveChangesAsync();
             var categoriaResponse = new CategoriaResponseDto
             {
+                Id = categoriaToUpdate.Id,
                 Nombre = categoriaToUpdate.Nombre,
                 Descripcion = categoriaToUpdate.Descripcion,
                 Activo = categoriaToUpdate.Activo,

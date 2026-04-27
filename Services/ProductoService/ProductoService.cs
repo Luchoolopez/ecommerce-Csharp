@@ -172,8 +172,7 @@ namespace EcommerceStore.Services.ProductoService
             {
                 throw new KeyNotFoundException($"Producto con id {id} no encontrado");
             }
-            _context.Productos.Remove(producto);
-            await _context.SaveChangesAsync();
+            producto.Activo = false;
             return true;
         }
 

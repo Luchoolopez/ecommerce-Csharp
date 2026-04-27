@@ -30,7 +30,7 @@ namespace EcommerceStore.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateCategoria(CategoriaCreateDto dto)
         {
             var nuevaCategoria = await _categoriaService.CreateCategoria(dto);

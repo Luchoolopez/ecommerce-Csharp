@@ -1,6 +1,9 @@
 ﻿using EcommerceStore.DTOs.UsuarioDto;
 using EcommerceStore.Services.UsuarioService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace EcommerceStore.Controllers
 {
@@ -14,6 +17,7 @@ namespace EcommerceStore.Controllers
             _usuarioService = usuarioService;
         }
 
+        [Authorize]
         [HttpGet("{userId}")] 
         public async Task<IActionResult> GetUser(int userId)
         {
@@ -21,6 +25,7 @@ namespace EcommerceStore.Controllers
             return Ok(new { exito = true, mensaje = "Usuario encontrado", data = user });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet] 
         public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
@@ -28,9 +33,17 @@ namespace EcommerceStore.Controllers
             return Ok(new { exito = true, mensaje = "Usuarios obtenidos exitosamente", data = users });
         }
 
+        [Authorize]
         [HttpPut("{userId}")] 
         public async Task<IActionResult> UpdateUser(int userId, UsuarioUpdateDto usuarioDto)
         {
+            var tokenId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            if(tokenId != userId)
+            {
+                return Forbid();
+            }
+
             var updatedUser = await _usuarioService.UpdateUser(userId, usuarioDto);
             return Ok(new { exito = true, mensaje = "Usuario actualizado exitosamente", data = updatedUser });
         }
@@ -42,6 +55,7 @@ namespace EcommerceStore.Controllers
             return BadRequest(new { exito = false, mensaje = "Ruta no implementada aún", data = (object)null });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{userId}")] 
         public async Task<IActionResult> DeleteUser(int userId)
         {

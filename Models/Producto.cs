@@ -35,7 +35,7 @@ namespace EcommerceStore.Models
         public Categoria? Categoria { get; set; }
 
         [Column("imagen_principal")]
-        public string ImagenPrincipal { get; set; } = null!;
+        public string? ImagenPrincipal { get; set; }
 
         [Column("es_nuevo")]
         public bool EsNuevo { get; set; } = false;

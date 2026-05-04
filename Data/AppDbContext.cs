@@ -1,4 +1,4 @@
-﻿using EcommerceStore.Models;
+using EcommerceStore.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceStore.Data
@@ -29,5 +29,8 @@ namespace EcommerceStore.Data
         public DbSet<Categoria> Categorias { get; set; }
 
         public DbSet<Producto> Productos { get; set; }
+        
+        public DbSet<Carrito> Carritos { get; set; }
+        public DbSet<CarritoItem> CarritoItems { get; set; }
     }
 }

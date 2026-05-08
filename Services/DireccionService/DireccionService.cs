@@ -41,7 +41,7 @@ namespace EcommerceStore.Services.DireccionService
 
             if (direccion == null)
             {
-                throw new Exception("Dirección no encontrada o no pertenece al usuario.");
+                throw new KeyNotFoundException("Dirección no encontrada o no pertenece al usuario.");
             }
 
             return new DireccionResponseDto
@@ -115,7 +115,7 @@ namespace EcommerceStore.Services.DireccionService
 
             if (direccionToUpdate == null)
             {
-                throw new Exception("Dirección no encontrada o no pertenece al usuario.");
+                throw new KeyNotFoundException("Dirección no encontrada o no pertenece al usuario.");
             }
 
             if (!string.IsNullOrEmpty(dto.Calle)) direccionToUpdate.Calle = dto.Calle;
@@ -169,7 +169,7 @@ namespace EcommerceStore.Services.DireccionService
 
             if (direccionToDelete == null)
             {
-                throw new Exception("Dirección no encontrada o no pertenece al usuario.");
+                throw new KeyNotFoundException("Dirección no encontrada o no pertenece al usuario.");
             }
 
             _context.Direcciones.Remove(direccionToDelete);

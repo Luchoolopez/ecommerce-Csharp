@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceStore.Models
@@ -54,5 +54,7 @@ namespace EcommerceStore.Models
         public string? RefreshToken { get; set; }
         [Column("refresh_token_expires")]
         public DateTime? RefreshTokenExpires { get; set; }
+
+        public List<Direccion> Direcciones { get; set; } = new List<Direccion>();
     }
 }

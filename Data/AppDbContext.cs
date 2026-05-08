@@ -32,5 +32,6 @@ namespace EcommerceStore.Data
         
         public DbSet<Carrito> Carritos { get; set; }
         public DbSet<CarritoItem> CarritoItems { get; set; }
+        public DbSet<Direccion> Direcciones { get; set; }
     }
 }

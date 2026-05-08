@@ -59,6 +59,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<GlobalExceptionMiddleware>(); //middleware para manejar excepciones globales
+
 app.UseAuthentication();
 
 app.UseAuthorization(); //pregunta si tenes permiso 

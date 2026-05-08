@@ -160,14 +160,23 @@ CREATE TABLE detalles_pedido (
 CREATE TABLE carritos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    variante_id INT NOT NULL,  
-    cantidad INT DEFAULT 1,
-    fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (variante_id) REFERENCES variantes_producto(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_variant (usuario_id, variante_id),
-    CONSTRAINT chk_cantidad_carrito CHECK (cantidad > 0)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- ======================================
+-- TABLA CARRITO_ITEMS
+-- ======================================
+CREATE TABLE carrito_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carrito_id INT NOT NULL,
+    producto_id INT NOT NULL,  
+    cantidad INT DEFAULT 1,
+    FOREIGN KEY (carrito_id) REFERENCES carritos(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_cart_product (carrito_id, producto_id),
+    CONSTRAINT chk_cantidad_carrito_item CHECK (cantidad > 0)
 );
 
 -- ======================================
@@ -265,7 +274,8 @@ CREATE INDEX idx_pedidos_estado ON pedidos(estado);
 CREATE INDEX idx_pedidos_numero ON pedidos(numero_pedido);
 CREATE INDEX idx_detalles_pedido ON detalles_pedido(pedido_id);
 CREATE INDEX idx_carritos_usuario ON carritos(usuario_id);
-CREATE INDEX idx_carritos_variante ON carritos(variante_id);
+CREATE INDEX idx_carrito_items_carrito ON carrito_items(carrito_id);
+CREATE INDEX idx_carrito_items_producto ON carrito_items(producto_id);
 CREATE INDEX idx_direcciones_usuario ON direcciones(usuario_id);
 CREATE INDEX idx_direcciones_principal ON direcciones(es_principal);
 CREATE INDEX idx_pagos_pedido ON pagos(pedido_id);

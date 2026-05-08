@@ -30,26 +30,39 @@ namespace EcommerceStore.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            var statusCode = (int)HttpStatusCode.InternalServerError;//500
+            // 1. Empezamos asumiendo que es un error del servidor (500)
+            var statusCode = (int)HttpStatusCode.InternalServerError;
+
+            // 2. Evaluamos EL TIPO de excepción para asignar el código HTTP correcto
+            switch (exception)
+            {
+                case KeyNotFoundException:
+                    statusCode = (int)HttpStatusCode.NotFound; // 404
+                    break;
+
+                case UnauthorizedAccessException:
+                    statusCode = (int)HttpStatusCode.Unauthorized; // 401
+                    break;
+
+                case ArgumentException:
+                case InvalidOperationException:
+                    statusCode = (int)HttpStatusCode.BadRequest; // 400
+                    break;
+            }
 
             var mensajeMinuscula = exception.Message.ToLower();
-
-            if (mensajeMinuscula.Contains("no encontrado"))
+            if (statusCode == 500 && mensajeMinuscula.Contains("invalido"))
             {
-                statusCode = (int)HttpStatusCode.NotFound;//404
+                statusCode = (int)HttpStatusCode.BadRequest;
+            }
 
-            }
-            else if (mensajeMinuscula.Contains("invalido"))
-            {
-                statusCode = (int)HttpStatusCode.BadRequest;//400
-            }
             context.Response.StatusCode = statusCode;
 
             var response = new
             {
                 exito = false,
                 mensaje = exception.Message,
-                data = (Object)null
+                data = (object)null
             };
 
             var jsonResponse = JsonSerializer.Serialize(response);
@@ -57,3 +70,4 @@ namespace EcommerceStore.Middleware
         }
     }
 }
+

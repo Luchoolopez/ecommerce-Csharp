@@ -35,10 +35,10 @@ namespace EcommerceStore.Controllers
             return Ok(new { exito = true, mensaje = "Carrito obtenido exitosamente", data = carrito });
         }
 
-        [HttpGet("items/{productoId}")]
-        public async Task<IActionResult> GetCartItem(int productoId)
+        [HttpGet("items/{varianteId}")]
+        public async Task<IActionResult> GetCartItem(int varianteId)
         {
-            var item = await _carritoService.GetCartItem(ObtenerUsuarioId(), productoId);
+            var item = await _carritoService.GetCartItem(ObtenerUsuarioId(), varianteId);
             return Ok(new { exito = true, mensaje = "Ítem obtenido exitosamente", data = item });
         }
 
@@ -49,18 +49,18 @@ namespace EcommerceStore.Controllers
             return Ok(new { exito = true, mensaje = "Producto agregado al carrito", data = carrito });
         }
 
-        [HttpPut("items/{productoId}")]
-        public async Task<IActionResult> UpdateItemQuantity(int productoId, CarritoActualizarItemDto dto)
+        [HttpPut("items/{varianteId}")]
+        public async Task<IActionResult> UpdateItemQuantity(int varianteId, CarritoActualizarItemDto dto)
         {
-            var carrito = await _carritoService.UpdateItemQuantity(ObtenerUsuarioId(), productoId, dto);
+            var carrito = await _carritoService.UpdateItemQuantity(ObtenerUsuarioId(), varianteId, dto);
             return Ok(new { exito = true, mensaje = "Cantidad actualizada exitosamente", data = carrito });
         }
 
-        [HttpDelete("items/{productoId}")]
-        public async Task<IActionResult> RemoveItem(int productoId)
+        [HttpDelete("items/{varianteId}")]
+        public async Task<IActionResult> RemoveItem(int varianteId)
         {
-            var carrito = await _carritoService.RemoveItem(ObtenerUsuarioId(), productoId);
-            return Ok(new { exito = true, mensaje = "Producto eliminado del carrito", data = carrito });
+            var carrito = await _carritoService.RemoveItem(ObtenerUsuarioId(), varianteId);
+            return Ok(new { exito = true, mensaje = "Variante eliminada del carrito", data = carrito });
         }
 
         [HttpDelete]

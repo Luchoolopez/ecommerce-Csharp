@@ -16,11 +16,11 @@ namespace EcommerceStore.Models
         [ForeignKey("CarritoId")]
         public Carrito? Carrito { get; set; }
 
-        [Column("producto_id")]
-        public int ProductoId { get; set; }
+        [Column("variante_id")]
+        public int VarianteId { get; set; }
 
-        [ForeignKey("ProductoId")]
-        public Producto? Producto { get; set; }
+        [ForeignKey("VarianteId")]
+        public VarianteProducto? Variante { get; set; }
 
         [Column("cantidad")]
         public int Cantidad { get; set; }

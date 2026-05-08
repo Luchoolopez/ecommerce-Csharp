@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceStore.Models
@@ -60,5 +60,6 @@ namespace EcommerceStore.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime FechaActualizacion { get; set; }
 
+        public List<VarianteProducto> Variantes { get; set; } = new List<VarianteProducto>();
     }
 }

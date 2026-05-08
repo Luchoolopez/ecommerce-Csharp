@@ -171,11 +171,11 @@ CREATE TABLE carritos (
 CREATE TABLE carrito_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     carrito_id INT NOT NULL,
-    producto_id INT NOT NULL,  
+    variante_id INT NOT NULL,  
     cantidad INT DEFAULT 1,
     FOREIGN KEY (carrito_id) REFERENCES carritos(id) ON DELETE CASCADE,
-    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_cart_product (carrito_id, producto_id),
+    FOREIGN KEY (variante_id) REFERENCES variantes_producto(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_cart_variant (carrito_id, variante_id),
     CONSTRAINT chk_cantidad_carrito_item CHECK (cantidad > 0)
 );
 
@@ -275,7 +275,7 @@ CREATE INDEX idx_pedidos_numero ON pedidos(numero_pedido);
 CREATE INDEX idx_detalles_pedido ON detalles_pedido(pedido_id);
 CREATE INDEX idx_carritos_usuario ON carritos(usuario_id);
 CREATE INDEX idx_carrito_items_carrito ON carrito_items(carrito_id);
-CREATE INDEX idx_carrito_items_producto ON carrito_items(producto_id);
+CREATE INDEX idx_carrito_items_variante ON carrito_items(variante_id);
 CREATE INDEX idx_direcciones_usuario ON direcciones(usuario_id);
 CREATE INDEX idx_direcciones_principal ON direcciones(es_principal);
 CREATE INDEX idx_pagos_pedido ON pagos(pedido_id);

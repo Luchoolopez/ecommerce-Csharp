@@ -63,6 +63,7 @@ namespace EcommerceStore.Services.PedidoService
 
                 var pedido = new Pedido
                 {
+                    NumeroPedido = GenerarNumeroPedido(),
                     UsuarioId = usuarioId,
                     DireccionId = dto.DireccionId,
                     Total = total,
@@ -134,6 +135,7 @@ namespace EcommerceStore.Services.PedidoService
 
                 var pedido = new Pedido
                 {
+                    NumeroPedido = GenerarNumeroPedido(),
                     UsuarioId = dto.UsuarioId,
                     DireccionId = dto.DireccionId,
                     Total = total,
@@ -208,6 +210,11 @@ namespace EcommerceStore.Services.PedidoService
             await _context.SaveChangesAsync();
 
             return MapToDto(pedido);
+        }
+
+        private string GenerarNumeroPedido()
+        {
+            return $"PED-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper()}";
         }
 
         private async Task<decimal> CalcularDescuentoCuponAsync(string? codigo, int usuarioId, decimal total)

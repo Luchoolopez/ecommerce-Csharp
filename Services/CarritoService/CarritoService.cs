@@ -86,7 +86,7 @@ namespace EcommerceStore.Services.CarritoService
             var variante = await _context.VariantesProducto.FindAsync(varianteId);
             if (variante == null || variante.Stock < dto.Cantidad)
             {
-                throw new Exception("No hay stock suficiente para actualizar la cantidad solicitada");
+                throw new InvalidOperationException("No hay stock suficiente para actualizar la cantidad solicitada");
             }
 
             itemExistente.Cantidad = dto.Cantidad;

@@ -25,7 +25,7 @@ namespace EcommerceStore.Controllers
             return Ok(new { exito = true, mensaje = "Usuario encontrado", data = user });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet] 
         public async Task<IActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int limit = 20)
         {

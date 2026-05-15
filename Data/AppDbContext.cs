@@ -22,9 +22,21 @@ namespace EcommerceStore.Data
             modelBuilder.Entity<Usuario>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            // Mapeo de Enums a string para la DB
+            modelBuilder.Entity<Pedido>()
+                .Property(p => p.Estado)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Pedido>()
+                .Property(p => p.ShippingProvider)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Cupon>()
+                .Property(c => c.Tipo)
+                .HasConversion<string>();
         }
 
-        //esto representa la tabla "usuarios" en la db 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
 
@@ -34,5 +46,9 @@ namespace EcommerceStore.Data
         public DbSet<CarritoItem> CarritoItems { get; set; }
         public DbSet<Direccion> Direcciones { get; set; }
         public DbSet<VarianteProducto> VariantesProducto { get; set; }
+        public DbSet<Cupon> Cupones { get; set; }
+        public DbSet<CuponUsado> CuponesUsados { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<DetallePedido> DetallesPedido { get; set; }
     }
 }

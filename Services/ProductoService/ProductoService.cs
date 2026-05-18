@@ -1,7 +1,8 @@
-﻿using EcommerceStore.Data;
+using EcommerceStore.Data;
 using EcommerceStore.DTOs;
 using EcommerceStore.DTOs.ProductoDto;
 using EcommerceStore.Models;
+using EcommerceStore.Services.StorageService;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceStore.Services.ProductoService
@@ -9,10 +10,12 @@ namespace EcommerceStore.Services.ProductoService
     public class ProductoService : IProductoService
     {
         private readonly AppDbContext _context;
+        private readonly IStorageService _storageService;
 
-        public ProductoService(AppDbContext context)
+        public ProductoService(AppDbContext context, IStorageService storageService)
         {
             _context = context;
+            _storageService = storageService;
         }
 
         public async Task<PagedResponse<ProductoResponseDto>> GetProductos(ProductoFilterDto filters)
@@ -160,6 +163,29 @@ namespace EcommerceStore.Services.ProductoService
             {
                 producto.Activo = dto.Activo.Value;
             }
+
+            await _context.SaveChangesAsync();
+            return MapToDto(producto);
+        }
+
+        public async Task<ProductoResponseDto> UploadImagenPrincipal(int id, IFormFile file)
+        {
+            var producto = await _context.Productos
+                .Include(p => p.Categoria)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (producto == null)
+            {
+                throw new KeyNotFoundException($"Producto con id {id} no encontrado");
+            }
+
+            if (!string.IsNullOrEmpty(producto.ImagenPrincipal))
+            {
+                await _storageService.DeleteFile(producto.ImagenPrincipal);
+            }
+
+            var uploadResult = await _storageService.UploadImage("productos", file);
+            producto.ImagenPrincipal = uploadResult.url;
 
             await _context.SaveChangesAsync();
             return MapToDto(producto);

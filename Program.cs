@@ -7,6 +7,7 @@ using EcommerceStore.Services.UsuarioService;
 using EcommerceStore.Services.CarritoService;
 using EcommerceStore.Services.DireccionService;
 using EcommerceStore.Services.PedidoService;
+using EcommerceStore.Services.StorageService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<IDireccionService, DireccionService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 builder.Services.AddAuthentication(options =>
@@ -54,6 +56,12 @@ builder.Services.AddOpenApi();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var storageService = scope.ServiceProvider.GetRequiredService<IStorageService>();
+    await storageService.InitializeMainBucket();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

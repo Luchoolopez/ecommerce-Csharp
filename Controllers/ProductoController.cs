@@ -1,4 +1,4 @@
-﻿using EcommerceStore.DTOs.ProductoDto;
+using EcommerceStore.DTOs.ProductoDto;
 using EcommerceStore.Services.ProductoService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +58,17 @@ namespace EcommerceStore.Controllers
         {
             var productoActualizado = await _productoService.UpdateProducto(id, dto);
             return Ok(new { exito = true, mensaje = "Producto actualizado exitosamente", data = productoActualizado });
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("{id}/imagen")]
+        public async Task<IActionResult> UploadImagen(int id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { exito = false, mensaje = "No se proporcionó ningún archivo" });
+
+            var productoActualizado = await _productoService.UploadImagenPrincipal(id, file);
+            return Ok(new { exito = true, mensaje = "Imagen subida exitosamente", data = productoActualizado });
         }
 
         [Authorize(Roles = "admin")]

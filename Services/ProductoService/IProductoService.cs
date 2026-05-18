@@ -1,4 +1,4 @@
-﻿using EcommerceStore.DTOs;
+using EcommerceStore.DTOs;
 using EcommerceStore.DTOs.ProductoDto;
 
 namespace EcommerceStore.Services.ProductoService
@@ -11,6 +11,7 @@ namespace EcommerceStore.Services.ProductoService
         Task<IEnumerable<ProductoResponseDto>> GetNewProductos(int limit = 10);
         Task<ProductoResponseDto> CreateProducto(ProductoCreateDto dto);
         Task<ProductoResponseDto> UpdateProducto(int id, ProductoUpdateDto dto);
+        Task<ProductoResponseDto> UploadImagenPrincipal(int id, IFormFile file);
         Task<bool> DeleteProducto(int id);
     }
 }

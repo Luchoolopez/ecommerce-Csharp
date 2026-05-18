@@ -8,6 +8,7 @@ using EcommerceStore.Services.CarritoService;
 using EcommerceStore.Services.DireccionService;
 using EcommerceStore.Services.PedidoService;
 using EcommerceStore.Services.StorageService;
+using EcommerceStore.Services.CuponService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<IDireccionService, DireccionService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ICuponService, CuponService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 builder.Services.AddAuthentication(options =>

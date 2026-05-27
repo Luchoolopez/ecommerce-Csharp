@@ -34,6 +34,7 @@ namespace EcommerceStore.Services.AuthService
             //creamos el paylod
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.Id.ToString()), //id del usuario
                 new Claim(JwtRegisteredClaimNames.Email, usuario.Email),
                 new Claim("rol", usuario.Rol.ToString())
@@ -92,6 +93,11 @@ namespace EcommerceStore.Services.AuthService
 
             var accessToken = GenerateAccesToken(nuevoUsuario);
             var refreshToken = GenerateRefreshToken();
+
+            // Guardar refresh token en el usuario recién creado
+            nuevoUsuario.RefreshToken = refreshToken;
+            nuevoUsuario.RefreshTokenExpires = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync();
 
             return new AuthResponseDto
             {
